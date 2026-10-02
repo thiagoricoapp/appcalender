@@ -88,6 +88,7 @@ async function handleAuthSubmit(e){
  e.preventDefault();
  if(authMode==="login")return signIn();
  if(authMode==="signup")return signUp();
+ if(authMode==="forgot")return resetRequest();
  return updatePassword();
 }
 async function signOut(){if(window.SUPABASE_READY)await window.supabaseClient.auth.signOut({scope:"local"});currentSession=null;localStorage.removeItem(K.habits);localStorage.removeItem(K.notes);showAuth();setAuthMode("login")}
@@ -174,7 +175,7 @@ function prevMonth(){month.setMonth(month.getMonth()-1);selectedDate=new Date(mo
 function nextMonth(){month.setMonth(month.getMonth()+1);selectedDate=new Date(month.getFullYear(),month.getMonth(),1);renderCalendar()}
 function clearNotes(){if(confirm("Limpar todas as notas?")){const ids=read(K.notes,[]).map(n=>n.id);localStorage.removeItem(K.notes);renderNotes();Promise.all(ids.map(remoteDeleteNote)).catch(console.error)}}
 function bind(){
- $("#authForm").addEventListener("submit",handleAuthSubmit);$("#authSwitch").addEventListener("click",()=>setAuthMode(authMode==="signup"?"login":"signup"));$("#forgotPassword").addEventListener("click",()=>setAuthMode("forgot"));$("#authEmail").addEventListener("input",()=>setAuthMessage(""));
+ $("#authForm").addEventListener("submit",handleAuthSubmit);$("#authSwitch").addEventListener("click",()=>{if(authMode==="forgot")setAuthMode("login");else setAuthMode(authMode==="signup"?"login":"signup")});$("#forgotPassword").addEventListener("click",()=>setAuthMode("forgot"));$("#authEmail").addEventListener("input",()=>setAuthMessage(""));
  $$("#addHabitButton,[data-open-habit]").forEach(b=>b.addEventListener("click",()=>openHabit()));$("#brandHome")?.addEventListener("click",()=>showView("today"));$("#mobileMenu")?.addEventListener("click",()=>$("#sidebar").classList.toggle("mobile-open"));
  $("#closeHabit").addEventListener("click",closeHabit);$("#closeProfile").addEventListener("click",closeProfile);$("#editProfile").addEventListener("click",openProfile);
  $("#prevMonth").addEventListener("click",prevMonth);$("#nextMonth").addEventListener("click",nextMonth);$("#habitFrequency").addEventListener("change",toggleFrequency);
@@ -194,7 +195,7 @@ const originalSetAuthMode=setAuthMode;
 setAuthMode=function(mode){if(mode==="forgot"){return handleForgot()}$("#authPassword").parentElement.classList.remove("hidden");return originalSetAuthMode(mode)};
 function watchAuth(){
  if(!window.SUPABASE_READY){setAuthMessage("Supabase não foi carregado. Verifique a configuração.","error");return}
- window.supabaseClient.auth.onAuthStateChange((event,session)=>{setTimeout(async()=>{if(event==="PASSWORD_RECOVERY"){authMode="reset";showAuth();originalSetAuthMode("reset")}else if(session&&!currentSession){await enterApp(session)}else if(!session&&currentSession){await signOut()}},0)});
+ window.supabaseClient.auth.onAuthStateChange((event,session)=>{setTimeout(async()=>{if(event==="PASSWORD_RECOVERY"){authMode="reset";showAuth();originalSetAuthMode("reset")}else if(session&&!currentSession){await enterApp(session)}else if(!session&&currentSession){currentSession=null;showAuth();setAuthMode("login")}},0)});
 }
 async function boot(){bind();applyTheme(getSettings().theme);watchAuth();if(!window.SUPABASE_READY){showAuth();return}const {data,error}=await window.supabaseClient.auth.getSession();if(error||!data.session)showAuth();else await enterApp(data.session)}
 boot();
