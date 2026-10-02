@@ -51,10 +51,16 @@
 
 <section id="notesView" class="view">
   <div class="section-heading"><div><span class="mini-label">DIÁRIO</span><h3>Notas da sua rotina</h3></div><span class="save-status" id="notesStatus">Salvo automaticamente</span></div>
-  <div class="notes-layout">
-    <div class="note-paper"><textarea id="notesEditor" placeholder="Escreva o que está pensando, o que aprendeu hoje, seus planos ou qualquer coisa que queira guardar..."></textarea></div>
-    <div class="notes-side"><div class="info-card"><span class="mini-label">PARA VOCÊ</span><h4>Use este espaço sem regras.</h4><p>Uma ideia, um desabafo, uma lista ou uma frase. Suas notas ficam salvas automaticamente neste dispositivo.</p></div><div class="info-card compact"><strong>Hoje</strong><span id="notesDate"></span></div></div>
+  <div class="notes-toolbar">
+    <button class="tool-button active" id="noteSelectTool">↖ Selecionar</button>
+    <button class="tool-button" id="noteAddButton">＋ Nova nota</button>
+    <button class="tool-button" id="noteClearButton">Limpar quadro</button>
+    <span class="canvas-hint">Arraste as notas pelo quadro</span>
   </div>
+  <div class="notes-canvas" id="notesCanvas">
+    <div class="canvas-empty" id="canvasEmpty"><div class="canvas-empty-icon">✦</div><h3>Seu espaço de ideias</h3><p>Crie notas para registrar ideias, planos, aprendizados ou lembretes.</p><button class="secondary-button" id="canvasFirstNote">＋ Criar nota</button></div>
+  </div>
+  <div class="notes-foot"><span id="notesStatus">Salvo automaticamente</span><span id="notesDate"></span></div>
 </section>
 
 <section id="settingsView" class="view">
