@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#f7f2e8"><title>Rotina — hábitos & evolução</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261002-5">
+<link rel="stylesheet" href="styles-v2.css">
 </head>
 <body>
 <div class="app-shell">
@@ -102,7 +102,7 @@
 </section>
 </main></div>
 
-<div class="modal-backdrop hidden" id="modalBackdrop"><div class="modal habit-modal"><button class="modal-close" id="closeModal" onclick="closeHabit()">×</button><span class="mini-label" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
+<div class="modal-backdrop" id="modalBackdrop" hidden><div class="modal habit-modal"><button class="modal-close" id="closeModal" onclick="closeHabit()">×</button><span class="mini-label" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
 <label>Nome do hábito<input id="habitName" maxlength="50" placeholder="Ex.: Acordar às 06:30" required></label>
 <div class="form-grid"><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option><option>💪</option><option>🧠</option></select></label><label>Categoria<input id="habitCategory" maxlength="30" list="categoryList" placeholder="Ex.: Saúde"><datalist id="categoryList"><option value="Rotina"><option value="Saúde"><option value="Estudos"><option value="Trabalho"><option value="Finanças"><option value="Bem-estar"><option value="Exercício"></datalist></label></div>
 <div class="form-grid"><label>Horário<input id="habitTime" type="time"></label><label>Meta<input id="habitGoalValue" type="number" min="0" step="1" placeholder="Ex.: 1"><select id="habitGoalUnit"><option value="vez">vez</option><option value="vezes">vezes</option><option value="minutos">minutos</option><option value="páginas">páginas</option><option value="copos">copos</option><option value="km">km</option><option value="horas">horas</option></select></label></div>
@@ -114,6 +114,6 @@
 <div class="modal-actions"><button class="secondary-button" type="button" id="deleteHabitFromModal">Excluir</button><button class="primary-button" type="submit" id="habitSubmit">Criar hábito</button></div>
 </form></div></div>
 
-<div class="modal-backdrop hidden" id="profileModalBackdrop"><div class="modal"><button class="modal-close" id="closeProfileModal" onclick="closeProfile()">×</button><span class="mini-label">SEU PERFIL</span><h2>Como quer aparecer?</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail (opcional)<input id="profileEmail" type="email" maxlength="80" placeholder="voce@email.com"></label><button class="primary-button full" type="submit">Salvar perfil</button></form></div></div>
-<script src="app.js?v=20261002-5"></script>
+<div class="modal-backdrop" id="profileModalBackdrop" hidden><div class="modal"><button class="modal-close" id="closeProfileModal" onclick="closeProfile()">×</button><span class="mini-label">SEU PERFIL</span><h2>Como quer aparecer?</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail (opcional)<input id="profileEmail" type="email" maxlength="80" placeholder="voce@email.com"></label><button class="primary-button full" type="submit">Salvar perfil</button></form></div></div>
+<script src="app-v2.js"></script>
 </body></html>
