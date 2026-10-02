@@ -1,119 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#f7f2e8"><title>Rotina — hábitos & evolução</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles-v2.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0d0f">
+<title>Rotina — hábitos & evolução</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles-v3.css">
 </head>
 <body>
-<div class="app-shell">
-<aside class="sidebar">
-  <div class="brand"><div class="brand-mark">✦</div><div><strong>Rotina</strong><span>hábitos & evolução</span></div></div>
-  <nav class="nav">
-    <button class="nav-item active" data-view="today"><span>☀</span> Hoje</button>
-    <button class="nav-item" data-view="calendar"><span>▦</span> Calendário</button>
-    <button class="nav-item" data-view="habits"><span>✎</span> Hábitos</button>
-    <button class="nav-item" data-view="evolution"><span>↗</span> Evolução</button>
-    <button class="nav-item" data-view="notes"><span>☷</span> Notas</button>
-  </nav>
-  <div class="sidebar-divider"></div>
-  <nav class="nav nav-secondary">
-    <button class="nav-item" data-view="settings"><span>⚙</span> Configurações</button>
-    <button class="nav-item" data-view="account"><span>○</span> Conta</button>
-  </nav>
-  <div class="sidebar-note">“<p>Pequenos passos, repetidos todos os dias, mudam a direção da sua vida.</p></div>
-</aside>
-<main class="content">
-<header class="topbar"><div><p class="eyebrow" id="greeting"></p><h1 id="pageTitle">Sua rotina de hoje</h1></div><button class="primary-button" id="addHabitButton" onclick="openHabit()">+ Novo hábito</button></header>
-
-<section id="todayView" class="view active-view">
-  <div class="hero-card"><div><span class="mini-label">HOJE</span><h2 id="todayDate"></h2><p id="dailyMessage"></p></div><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><span>feito</span></div></div></div>
-  <div class="section-heading"><div><span class="mini-label">SEUS HÁBITOS</span><h3>O que você quer construir?</h3></div><span class="count-pill" id="habitCount">0 hábitos</span></div>
-  <div id="habitList" class="habit-list"></div>
-  <div id="emptyState" class="empty-state hidden"><div class="empty-icon">✎</div><h3>Comece com um hábito</h3><p>Escolha algo que você quer transformar em parte da sua rotina.</p><button class="secondary-button" id="emptyAddButton" onclick="openHabit()">Criar primeiro hábito</button></div>
-</section>
-
-<section id="calendarView" class="view">
-  <div class="section-heading"><div><span class="mini-label">VISÃO MENSAL</span><h3 id="calendarMonthTitle"></h3></div><div class="calendar-actions"><button class="icon-button" id="prevMonth" onclick="prevMonth()">‹</button><button class="icon-button" id="nextMonth" onclick="nextMonth()">›</button></div></div>
-  <div class="calendar-card" id="calendar"></div>
-  <div class="selected-day-card" id="selectedDayCard">
-    <div class="selected-day-head"><div><span class="mini-label">DIA SELECIONADO</span><h3 id="selectedDateTitle">Selecione um dia</h3></div><span class="selected-progress" id="selectedProgress">0%</span></div>
-    <div id="selectedDayHabits" class="selected-day-habits"></div>
-  </div>
-</section>
-
-<section id="habitsView" class="view">
-  <div class="section-heading"><div><span class="mini-label">SEU SISTEMA</span><h3>Hábitos que você quer ter</h3></div></div>
-  <div id="allHabits" class="all-habits"></div>
-  <div id="emptyHabits" class="empty-state hidden"><div class="empty-icon">✎</div><h3>Nenhum hábito cadastrado</h3><p>Comece criando uma pequena mudança que faça sentido para você.</p><button class="secondary-button" id="emptyAddButton2" onclick="openHabit()">Criar hábito</button></div>
-</section>
-
-<section id="evolutionView" class="view">
-  <div class="section-heading"><div><span class="mini-label">EVOLUÇÃO</span><h3 id="evolutionTitle">Selecione um hábito</h3></div><button class="secondary-button" id="evolutionBack" onclick="showView('habits')">← Voltar para hábitos</button></div>
-  <div id="evolutionEmpty" class="empty-state"><div class="empty-icon">↗</div><h3>Acompanhe uma evolução de cada vez</h3><p>Abra um hábito na aba Hábitos para ver sequência, consistência e histórico.</p></div>
-  <div id="evolutionContent" class="hidden">
-    <div class="evolution-head">
-      <div class="evolution-icon" id="evolutionIcon">☀️</div><div class="evolution-main"><span class="mini-label" id="evolutionCategory">ROTINA</span><h2 id="evolutionName"></h2><p id="evolutionSchedule"></p></div>
-      <button class="primary-button" id="evolutionEdit" onclick="openHabit(selectedHabitId)">Editar hábito</button>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="brand" id="brandHome" aria-label="Ir para hoje"><span class="brand-symbol">✦</span><span><b>Rotina</b><small>hábitos & evolução</small></span></button>
+      <nav class="nav">
+        <button class="nav-item active" data-view="today"><span>⌂</span><b>Hoje</b></button>
+        <button class="nav-item" data-view="calendar"><span>▦</span><b>Calendário</b></button>
+        <button class="nav-item" data-view="habits"><span>✓</span><b>Hábitos</b></button>
+        <button class="nav-item" data-view="evolution"><span>↗</span><b>Evolução</b></button>
+        <button class="nav-item" data-view="notes"><span>✎</span><b>Notas</b></button>
+      </nav>
     </div>
-    <div class="stats-grid">
-      <div class="stat-card"><span>SEQUÊNCIA ATUAL</span><strong id="statStreak">0</strong><small>dias</small></div>
-      <div class="stat-card"><span>MELHOR SEQUÊNCIA</span><strong id="statBest">0</strong><small>dias</small></div>
-      <div class="stat-card"><span>ÚLTIMOS 30 DIAS</span><strong id="statRate">0%</strong><small>consistência</small></div>
-      <div class="stat-card"><span>TOTAL REGISTRADO</span><strong id="statTotal">0</strong><small>conclusões</small></div>
+    <div class="sidebar-bottom">
+      <button class="nav-item" data-view="settings"><span>⚙</span><b>Configurações</b></button>
+      <button class="nav-item" data-view="account"><span>○</span><b>Conta</b></button>
+      <div class="side-quote"><span>“</span><p>Constância antes de intensidade.</p></div>
     </div>
-    <div class="evolution-panels">
-      <div class="panel-card"><div class="panel-head"><div><span class="mini-label">HISTÓRICO</span><h3>Últimos 30 dias</h3></div><span class="legend"><i></i> concluído</span></div><div id="heatmap" class="heatmap"></div></div>
-      <div class="panel-card"><div class="panel-head"><div><span class="mini-label">DETALHES</span><h3>Como está esse hábito</h3></div></div><div class="detail-rows" id="evolutionDetails"></div></div>
-    </div>
-  </div>
-</section>
+  </aside>
 
-<section id="notesView" class="view">
-  <div class="section-heading"><div><span class="mini-label">DIÁRIO</span><h3>Notas da sua rotina</h3></div><span class="save-status" id="notesStatusHeader">Salvo automaticamente</span></div>
-  <div class="notes-toolbar">
-    <button class="tool-button active" id="noteSelectTool">↖ Selecionar</button>
-    <button class="tool-button" id="noteAddButton" onclick="addNote()">＋ Nova nota</button>
-    <button class="tool-button" id="noteClearButton" onclick="clearNotes()">Limpar quadro</button>
-    <span class="canvas-hint">Arraste as notas pelo quadro</span>
-  </div>
-  <div class="notes-canvas" id="notesCanvas">
-    <div class="canvas-empty" id="canvasEmpty"><div class="canvas-empty-icon">✦</div><h3>Seu espaço de ideias</h3><p>Crie notas para registrar ideias, planos, aprendizados ou lembretes.</p><button class="secondary-button" id="canvasFirstNote" onclick="addNote()">＋ Criar nota</button></div>
-  </div>
-  <div class="notes-foot"><span id="notesStatus">Salvo automaticamente</span><span id="notesDate"></span></div>
-</section>
+  <main class="main">
+    <header class="topbar">
+      <div class="title-block"><span class="eyebrow" id="eyebrow">HOJE</span><h1 id="pageTitle">Sua rotina</h1><p id="pageSubtitle">Um dia de cada vez.</p></div>
+      <div class="top-actions">
+        <span class="sync-dot" id="syncStatus"><i></i><em>Local</em></span>
+        <button class="icon-btn mobile-only" id="mobileMenu" aria-label="Menu">☰</button>
+        <button class="primary-btn" id="addHabitButton">+ Novo hábito</button>
+      </div>
+    </header>
 
-<section id="settingsView" class="view">
-  <div class="section-heading"><div><span class="mini-label">PERSONALIZAÇÃO</span><h3>Configurações</h3></div></div>
-  <div class="settings-list">
-    <div class="setting-card"><div><strong>Tema</strong><p>Escolha o clima visual da sua rotina.</p></div><select id="themeSelect"><option value="paper">Papel clássico</option><option value="night">Noite calma</option><option value="sage">Verde suave</option></select></div>
-    <div class="setting-card"><div><strong>Mensagens motivacionais</strong><p>Mostrar uma frase diferente todos os dias.</p></div><label class="switch"><input id="motivationToggle" type="checkbox" checked><span></span></label></div>
-    <div class="setting-card"><div><strong>Salvar automaticamente</strong><p>Hábitos e notas são guardados no navegador a cada alteração.</p></div><span class="enabled-badge">ATIVO</span></div>
-    <div class="danger-card"><div><strong>Apagar dados locais</strong><p>Remove hábitos, progresso e notas deste navegador.</p></div><button class="danger-button" id="clearData" onclick="clearLocal()">Apagar dados</button></div>
-  </div>
-</section>
+    <section class="view active-view" id="todayView">
+      <div class="today-grid">
+        <article class="focus-card">
+          <div class="focus-copy"><span class="eyebrow">SEU FOCO</span><h2 id="todayDate">Hoje</h2><p id="dailyMessage"></p></div>
+          <div class="ring-wrap"><div class="progress-ring" id="progressRing"><strong id="progressPercent">0%</strong><span>concluído</span></div></div>
+        </article>
+        <div class="mini-stats">
+          <article class="metric-card"><span>HÁBITOS HOJE</span><strong id="metricHabits">0</strong><small>programados</small></article>
+          <article class="metric-card"><span>CONCLUÍDOS</span><strong id="metricDone">0</strong><small>até agora</small></article>
+          <article class="metric-card"><span>SEQUÊNCIA</span><strong id="metricStreak">0</strong><small>dias</small></article>
+        </div>
+      </div>
+      <div class="section-head"><div><span class="eyebrow">ROTINA DO DIA</span><h2>O que você quer construir?</h2></div><span class="count-chip" id="habitCount">0 hábitos</span></div>
+      <div class="habit-grid" id="habitList"></div>
+      <div class="empty hidden" id="emptyState"><div class="empty-icon">＋</div><h3>Comece pequeno.</h3><p>Crie um hábito e comece a registrar sua evolução.</p><button class="ghost-btn" data-open-habit>Adicionar primeiro hábito</button></div>
+    </section>
 
-<section id="accountView" class="view">
-  <div class="section-heading"><div><span class="mini-label">SEU PERFIL</span><h3>Conta</h3></div></div>
-  <div class="profile-card"><div class="avatar" id="avatar">R</div><div><h3 id="profileNameText">Minha rotina</h3><p id="profileEmailText">Perfil local</p></div><button class="secondary-button" id="editProfile" onclick="openProfile()">Editar perfil</button></div>
-  <div class="info-card account-info"><span class="mini-label">ESTA VERSÃO</span><h4>Perfil local</h4><p>Por enquanto, seus dados ficam neste navegador. A próxima evolução pode adicionar login e sincronização na nuvem.</p></div>
-</section>
-</main></div>
+    <section class="view" id="calendarView">
+      <div class="page-toolbar"><div><span class="eyebrow">HISTÓRICO</span><h2 id="calendarMonthTitle">Outubro 2026</h2></div><div class="toolbar-actions"><button class="icon-btn" id="prevMonth">‹</button><button class="icon-btn" id="nextMonth">›</button></div></div>
+      <div class="calendar-layout"><div class="panel calendar-panel" id="calendar"></div><div class="panel selected-panel"><div class="selected-top"><div><span class="eyebrow">DIA SELECIONADO</span><h3 id="selectedDateTitle">Hoje</h3></div><span class="count-chip accent" id="selectedProgress">0% • 0/0</span></div><div id="selectedDayHabits"></div></div></div>
+    </section>
 
-<div class="modal-backdrop" id="modalBackdrop" hidden><div class="modal habit-modal"><button class="modal-close" id="closeModal" onclick="closeHabit()">×</button><span class="mini-label" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
-<label>Nome do hábito<input id="habitName" maxlength="50" placeholder="Ex.: Acordar às 06:30" required></label>
-<div class="form-grid"><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option><option>💪</option><option>🧠</option></select></label><label>Categoria<input id="habitCategory" maxlength="30" list="categoryList" placeholder="Ex.: Saúde"><datalist id="categoryList"><option value="Rotina"><option value="Saúde"><option value="Estudos"><option value="Trabalho"><option value="Finanças"><option value="Bem-estar"><option value="Exercício"></datalist></label></div>
-<div class="form-grid"><label>Horário<input id="habitTime" type="time"></label><label>Meta<input id="habitGoalValue" type="number" min="0" step="1" placeholder="Ex.: 1"><select id="habitGoalUnit"><option value="vez">vez</option><option value="vezes">vezes</option><option value="minutos">minutos</option><option value="páginas">páginas</option><option value="copos">copos</option><option value="km">km</option><option value="horas">horas</option></select></label></div>
-<label>Frequência<select id="habitFrequency"><option value="daily">Todos os dias</option><option value="specific">Dias específicos</option><option value="weekly">Meta semanal</option></select></label>
-<div id="specificDaysWrap" class="days-wrap"><span class="field-label">Dias da semana</span><div class="day-picker">
-<label><input type="checkbox" value="1">Seg</label><label><input type="checkbox" value="2">Ter</label><label><input type="checkbox" value="3">Qua</label><label><input type="checkbox" value="4">Qui</label><label><input type="checkbox" value="5">Sex</label><label><input type="checkbox" value="6">Sáb</label><label><input type="checkbox" value="7">Dom</label>
-</div></div>
-<div id="weeklyWrap" class="weekly-wrap"><label>Quantas vezes por semana?<input id="weeklyTarget" type="number" min="1" max="7" value="3"></label></div>
-<div class="modal-actions"><button class="secondary-button" type="button" id="deleteHabitFromModal">Excluir</button><button class="primary-button" type="submit" id="habitSubmit">Criar hábito</button></div>
+    <section class="view" id="habitsView">
+      <div class="page-toolbar"><div><span class="eyebrow">SEU SISTEMA</span><h2>Hábitos</h2><p>Defina como quer praticar cada hábito.</p></div><button class="primary-btn" data-open-habit>+ Adicionar</button></div>
+      <div class="habit-management" id="allHabits"></div>
+      <div class="empty hidden" id="emptyHabits"><div class="empty-icon">✓</div><h3>Nenhum hábito ainda.</h3><p>Transforme uma intenção em uma rotina.</p><button class="ghost-btn" data-open-habit>Criar hábito</button></div>
+    </section>
+
+    <section class="view" id="evolutionView">
+      <div class="page-toolbar"><div><span class="eyebrow">EVOLUÇÃO</span><h2 id="evolutionTitle">Escolha um hábito</h2><p>Acompanhe consistência, sequência e histórico.</p></div></div>
+      <div id="evolutionEmpty" class="empty"><div class="empty-icon">↗</div><h3>Escolha um hábito</h3><p>Na aba Hábitos, abra “Evolução” para ver os dados.</p></div>
+      <div id="evolutionContent" class="hidden">
+        <div class="evolution-hero panel"><div class="habit-identity"><div class="habit-avatar" id="evolutionIcon">☀️</div><div><span class="eyebrow" id="evolutionCategory">ROTINA</span><h3 id="evolutionName">Hábito</h3><p id="evolutionSchedule">Todos os dias</p></div></div><button class="secondary-btn" id="evolutionEdit">Editar</button></div>
+        <div class="stat-grid"><article class="stat-card"><span>ATUAL</span><strong id="statStreak">0</strong><small>dias</small></article><article class="stat-card"><span>MELHOR</span><strong id="statBest">0</strong><small>dias</small></article><article class="stat-card"><span>30 DIAS</span><strong id="statRate">0%</strong><small>consistência</small></article><article class="stat-card"><span>TOTAL</span><strong id="statTotal">0</strong><small>conclusões</small></article></div>
+        <div class="evolution-grid"><div class="panel"><div class="panel-title"><div><span class="eyebrow">HISTÓRICO</span><h3>Últimos 30 dias</h3></div><span class="legend"><i></i> concluído</span></div><div class="heatmap" id="heatmap"></div></div><div class="panel"><div class="panel-title"><div><span class="eyebrow">DETALHES</span><h3>Configuração</h3></div></div><div class="details" id="evolutionDetails"></div></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="notesView">
+      <div class="page-toolbar"><div><span class="eyebrow">ESPAÇO PESSOAL</span><h2>Notas</h2><p>Ideias, planos, aprendizados e lembretes.</p></div><span class="save-state" id="notesStatus">Salvo automaticamente</span></div>
+      <div class="notes-tools"><button class="tool-btn" data-add-note>＋ Nova nota</button><button class="tool-btn" data-clear-notes>Limpar quadro</button><span>Arraste os cartões pelo espaço.</span></div>
+      <div class="notes-canvas" id="notesCanvas"><div class="canvas-empty" id="canvasEmpty"><div class="empty-icon">✦</div><h3>Seu espaço de ideias</h3><p>Crie notas rápidas e organize-as do seu jeito.</p><button class="ghost-btn" data-add-note>＋ Criar nota</button></div></div>
+    </section>
+
+    <section class="view" id="settingsView">
+      <div class="page-toolbar"><div><span class="eyebrow">PREFERÊNCIAS</span><h2>Configurações</h2><p>Deixe o app com a sua cara.</p></div></div>
+      <div class="settings-grid">
+        <div class="panel setting-row"><div><strong>Tema</strong><p>Escolha a atmosfera da interface.</p></div><select id="themeSelect"><option value="obsidian">Obsidiana</option><option value="midnight">Midnight</option><option value="paper">Papel</option><option value="sage">Sage</option></select></div>
+        <div class="panel setting-row"><div><strong>Mensagem diária</strong><p>Mostrar uma frase curta no painel de hoje.</p></div><label class="switch"><input id="motivationToggle" type="checkbox" checked><span></span></label></div>
+        <div class="panel setting-row"><div><strong>Sincronização</strong><p id="supabaseSettingText">Modo local ativo. Conecte o Supabase para sincronizar.</p></div><span class="status-pill" id="supabaseSettingStatus">LOCAL</span></div>
+        <div class="panel setting-row danger-row"><div><strong>Limpar dados locais</strong><p>Apaga hábitos, notas, perfil e preferências deste navegador.</p></div><button class="danger-btn" id="clearData">Apagar</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="accountView">
+      <div class="page-toolbar"><div><span class="eyebrow">PERFIL</span><h2>Conta</h2><p>Seu perfil pessoal no Rotina.</p></div></div>
+      <div class="panel account-card"><div class="account-avatar" id="accountAvatar">R</div><div class="account-main"><span class="eyebrow">PERFIL LOCAL</span><h3 id="profileNameText">Minha rotina</h3><p id="profileEmailText">Ainda não conectado</p></div><div class="account-actions"><button class="secondary-btn" id="editProfile">Editar perfil</button><button class="primary-btn" id="connectSupabase">Conectar Supabase</button></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="habitModal" hidden><div class="modal"><button class="modal-x" id="closeHabit">×</button><span class="eyebrow" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
+  <label>Nome<input id="habitName" maxlength="60" placeholder="Ex.: Acordar às 06:30" required></label>
+  <div class="form-grid"><label>Categoria<input id="habitCategory" list="categoryList" maxlength="30" placeholder="Saúde"><datalist id="categoryList"><option>Rotina</option><option>Saúde</option><option>Estudos</option><option>Trabalho</option><option>Exercício</option><option>Bem-estar</option><option>Finanças</option></datalist></label><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option><option>💪</option><option>🧠</option></select></label></div>
+  <div class="form-grid"><label>Horário<input id="habitTime" type="time"></label><label>Meta<input id="habitGoalValue" type="number" min="0" step="1" placeholder="1"></label></div>
+  <label>Unidade da meta<select id="habitGoalUnit"><option value="vez">vez</option><option value="vezes">vezes</option><option value="minutos">minutos</option><option value="páginas">páginas</option><option value="copos">copos</option><option value="km">km</option><option value="horas">horas</option></select></label>
+  <label>Frequência<select id="habitFrequency"><option value="daily">Todos os dias</option><option value="specific">Dias específicos</option><option value="weekly">Meta semanal</option></select></label>
+  <div class="days-wrap" id="specificDaysWrap"><span class="field-label">Dias da semana</span><div class="day-picker"><label><input type="checkbox" value="1">Seg</label><label><input type="checkbox" value="2">Ter</label><label><input type="checkbox" value="3">Qua</label><label><input type="checkbox" value="4">Qui</label><label><input type="checkbox" value="5">Sex</label><label><input type="checkbox" value="6">Sáb</label><label><input type="checkbox" value="7">Dom</label></div></div>
+  <div class="days-wrap" id="weeklyWrap"><label>Quantas vezes por semana?<input id="weeklyTarget" type="number" min="1" max="7" value="3"></label></div>
+  <div class="modal-footer"><button type="button" class="danger-btn" id="deleteHabitModal">Excluir</button><button type="submit" class="primary-btn" id="habitSubmit">Criar hábito</button></div>
 </form></div></div>
 
-<div class="modal-backdrop" id="profileModalBackdrop" hidden><div class="modal"><button class="modal-close" id="closeProfileModal" onclick="closeProfile()">×</button><span class="mini-label">SEU PERFIL</span><h2>Como quer aparecer?</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail (opcional)<input id="profileEmail" type="email" maxlength="80" placeholder="voce@email.com"></label><button class="primary-button full" type="submit">Salvar perfil</button></form></div></div>
-<script src="app-v2.js"></script>
+<div class="modal-backdrop" id="profileModal" hidden><div class="modal small-modal"><button class="modal-x" id="closeProfile">×</button><span class="eyebrow">PERFIL</span><h2>Seu espaço pessoal</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail<input id="profileEmail" type="email" maxlength="100" placeholder="voce@email.com"></label><button type="submit" class="primary-btn">Salvar perfil</button></form></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
+<script src="app-v3.js"></script>
 </body></html>
