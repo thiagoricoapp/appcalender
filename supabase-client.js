@@ -1,8 +1,8 @@
-// Supabase client — preencha apenas com os valores PUBLICÁVEIS do seu projeto.
-// Nunca coloque uma service_role/secret key neste arquivo ou no navegador.
+// Supabase client — chave publicável: segura para uso no navegador.
+// Nunca coloque service_role/secret key neste arquivo.
 window.SUPABASE_CONFIG={
-  url:"",
-  publishableKey:""
+  url:"https://nqqvqobayffaxcadchzj.supabase.co",
+  publishableKey:"sb_publishable_Fcb-G-ohECsquIVtAI-cPg_ewVFIYQ7"
 };
 window.SUPABASE_READY=Boolean(window.SUPABASE_CONFIG.url&&window.SUPABASE_CONFIG.publishableKey&&window.supabase);
 window.supabaseClient=window.SUPABASE_READY
