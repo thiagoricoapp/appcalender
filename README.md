@@ -29,3 +29,12 @@ Cada hábito pode ter:
 - Consistência dos últimos 30 dias.
 - Total de conclusões.
 - Histórico visual dos últimos 30 dias.
+
+
+## V3 — visual e arquitetura
+A interface foi redesenhada com foco em desktop, tema escuro profissional, microinterações e navegação responsiva. O projeto também inclui uma base preparada para Supabase:
+- `supabase-client.js` para URL + chave publicável.
+- `supabase-schema.sql` com perfis, hábitos, conclusões, notas e configurações.
+- RLS por usuário nas tabelas.
+
+O app continua funcionando em modo local até as credenciais e o login do Supabase serem configurados.
