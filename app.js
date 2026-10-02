@@ -60,8 +60,8 @@ function calcStats(h){
   while(true){let wk=weekKey(cursor);if((counts[wk]||0)>=h.weeklyTarget){current++;cursor.setDate(cursor.getDate()-7)}else break}
   let weeks=Object.keys(counts).sort(),run=0,prev=null;weeks.forEach(w=>{let p=w.split("-").map(Number),dt=new Date(p[0],p[1]-1,p[2]);if((counts[w]||0)>=h.weeklyTarget){if(prev){let delta=Math.round((dt-prev)/86400000);if(delta===7)run++;else run=1}else run=1;best=Math.max(best,run);prev=dt}else{run=0;prev=null}});
  }else{
-  let d=new Date(today);while(d>=new Date(h.createdAt||today)){if(isScheduled(h,d)){if(h.completions?.[key(d)])current++;else break}d.setDate(d.getDate()-1)}
-  let run=0,d=new Date(h.createdAt||today);d.setHours(0,0,0,0);while(d<=today){if(isScheduled(h,d)){if(h.completions?.[key(d)])run++;else run=0;best=Math.max(best,run)}d.setDate(d.getDate()+1)}
+  let currentDate=new Date(today);while(currentDate>=new Date(h.createdAt||today)){if(isScheduled(h,currentDate)){if(h.completions?.[key(currentDate)])current++;else break}currentDate.setDate(currentDate.getDate()-1)}
+  let run=0,histDate=new Date(h.createdAt||today);histDate.setHours(0,0,0,0);while(histDate<=today){if(isScheduled(h,histDate)){if(h.completions?.[key(histDate)])run++;else run=0;best=Math.max(best,run)}histDate.setDate(histDate.getDate()+1)}
  }
  let scheduled=0,done30=0;
  for(let i=0;i<30;i++){let dt=new Date(today);dt.setDate(dt.getDate()-i);if(isScheduled(h,dt)){scheduled++;if(h.completions?.[key(dt)])done30++}}
