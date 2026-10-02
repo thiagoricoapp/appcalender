@@ -16,3 +16,16 @@ A primeira versão usa `localStorage`, portanto os dados ficam no navegador/disp
 
 ## Próxima evolução
 Autenticação, banco de dados, sincronização entre dispositivos, edição de hábitos, metas por frequência, estatísticas, conquistas e PWA.
+
+## Hábitos avançados
+Cada hábito pode ter:
+- Frequência diária, dias específicos ou meta semanal.
+- Horário.
+- Meta com unidade.
+- Categoria.
+- Edição e exclusão.
+- Página individual de evolução.
+- Sequência atual e melhor sequência.
+- Consistência dos últimos 30 dias.
+- Total de conclusões.
+- Histórico visual dos últimos 30 dias.
