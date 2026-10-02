@@ -80,7 +80,7 @@ body.theme-night .modal-close{color:var(--muted)}
 
 body.theme-sage .day,
 body.theme-sage .calendar-day-btn{background:var(--paper2);color:var(--ink);border-color:var(--line)}
-body.theme-sage .primary-button{background:#263127;color:#f6f8f2)}
+body.theme-sage .primary-button{background:#263127;color:#f6f8f2}
 body.theme-sage .selected-progress,
 body.theme-sage .frequency-badge{background:var(--accent-soft);color:var(--ink)}
 body.theme-sage .note-card.yellow{background:#f4e9a9}
