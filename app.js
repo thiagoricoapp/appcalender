@@ -38,7 +38,33 @@ function renderSelectedDay(){
  d.habits.forEach(h=>{let e=document.createElement("div");e.className="selected-habit";let yes=!!h.completions?.[k];e.innerHTML=`<div class="selected-habit-main"><div class="habit-icon">${h.icon}</div><div><div class="selected-habit-name">${esc(h.name)}</div><div class="mini-label" style="margin-top:3px">${esc(h.goal||"Todos os dias")}</div></div></div><button class="check ${yes?"done":""}" type="button">${yes?"✓":"○"}</button>`;e.querySelector(".check").onclick=()=>toggleOnDate(h.id,k);box.appendChild(e)})
 }
 function toggleOnDate(id,k){let d=data(),h=d.habits.find(x=>x.id===id);if(!h)return;h.completions=h.completions||{};h.completions[k]=!h.completions[k];if(!h.completions[k])delete h.completions[k];save(d);renderCalendar()}
-function renderNotes(){let n=localStorage.getItem(NOTES)||"";$("#notesEditor").value=n;$("#notesDate").textContent=today.toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"})}
+const NOTES_DATA="rotina-notes-board-v1";
+function getBoard(){try{return JSON.parse(localStorage.getItem(NOTES_DATA))||[]}catch{return[]}}
+function saveBoard(items){localStorage.setItem(NOTES_DATA,JSON.stringify(items))}
+function renderNotes(){
+ const board=getBoard(),canvas=$("#notesCanvas");canvas.querySelectorAll(".note-card").forEach(x=>x.remove());
+ $("#canvasEmpty").classList.toggle("hidden",board.length>0);
+ $("#notesDate").textContent=today.toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"});
+ board.forEach(n=>mountNote(n));
+}
+function mountNote(note){
+ const card=document.createElement("article");card.className="note-card "+note.color;card.dataset.id=note.id;
+ card.style.left=note.x+"px";card.style.top=note.y+"px";
+ card.innerHTML=`<span class="note-pin"></span><button class="note-delete" title="Excluir">×</button><textarea maxlength="500" placeholder="Escreva uma ideia...">${esc(note.text)}</textarea>`;
+ $("#notesCanvas").appendChild(card);
+ card.querySelector(".note-delete").onclick=()=>{saveBoard(getBoard().filter(x=>x.id!==note.id));renderNotes()};
+ card.querySelector("textarea").addEventListener("input",e=>{let all=getBoard(),item=all.find(x=>x.id===note.id);if(item){item.text=e.target.value;saveBoard(all);$("#notesStatus").textContent="Salvo agora";clearTimeout(window.boardTimer);window.boardTimer=setTimeout(()=>$("#notesStatus").textContent="Salvo automaticamente",700)}});
+ let dragging=false,dx=0,dy=0;
+ const down=e=>{if(e.target.tagName==="TEXTAREA"||e.target.closest(".note-delete"))return;dragging=true;card.setPointerCapture?.(e.pointerId);dx=e.clientX-card.offsetLeft;dy=e.clientY-card.offsetTop};
+ const move=e=>{if(!dragging)return;let rect=$("#notesCanvas").getBoundingClientRect(),x=Math.max(6,Math.min(e.clientX-rect.left-dx,rect.width-card.offsetWidth-6)),y=Math.max(6,Math.min(e.clientY-rect.top-dy,rect.height-card.offsetHeight-6));card.style.left=x+"px";card.style.top=y+"px"};
+ const up=()=>{if(!dragging)return;dragging=false;let all=getBoard(),item=all.find(x=>x.id===note.id);if(item){item.x=parseInt(card.style.left);item.y=parseInt(card.style.top);saveBoard(all)}};
+ card.addEventListener("pointerdown",down);card.addEventListener("pointermove",move);card.addEventListener("pointerup",up);card.addEventListener("pointercancel",up);
+}
+function addNote(){
+ const canvas=$("#notesCanvas"),colors=["yellow","peach","green","blue"],board=getBoard(),offset=(board.length%4)*22;
+ const note={id:Date.now().toString(),text:"",color:colors[board.length%colors.length],x:50+offset+(board.length%5)*38,y:55+offset+(board.length%4)*35};
+ board.push(note);saveBoard(board);renderNotes();setTimeout(()=>{const card=canvas.querySelector(`.note-card[data-id="${note.id}"] textarea`);card?.focus()},0)
+}
 function renderSettings(){let s=getSettings();$("#themeSelect").value=s.theme;$("#motivationToggle").checked=s.motivation;applyTheme(s.theme)}
 function renderProfile(){let p=getProfile();$("#profileNameText").textContent=p.name||"Minha rotina";$("#profileEmailText").textContent=p.email||"Perfil local";$("#avatar").textContent=(p.name||"R").trim().charAt(0).toUpperCase()}
 function applyTheme(theme){document.body.classList.remove("theme-night","theme-sage");if(theme==="night")document.body.classList.add("theme-night");if(theme==="sage")document.body.classList.add("theme-sage")}
@@ -49,9 +75,9 @@ document.querySelectorAll(".nav-item").forEach(x=>x.onclick=()=>view(x.dataset.v
 $("#addHabitButton").onclick=openHabit;$("#emptyAddButton").onclick=openHabit;$("#emptyAddButton2").onclick=openHabit;$("#closeModal").onclick=closeHabit;$("#modalBackdrop").onclick=e=>{if(e.target.id==="modalBackdrop")closeHabit()};
 $("#prevMonth").onclick=()=>{month.setMonth(month.getMonth()-1);selectedDate=new Date(month.getFullYear(),month.getMonth(),1);renderCalendar()};$("#nextMonth").onclick=()=>{month.setMonth(month.getMonth()+1);selectedDate=new Date(month.getFullYear(),month.getMonth(),1);renderCalendar()};
 $("#habitForm").onsubmit=e=>{e.preventDefault();let d=data();d.habits.push({id:Date.now().toString(),name:$("#habitName").value.trim(),icon:$("#habitIcon").value,goal:$("#habitGoal").value.trim(),completions:{}});save(d);closeHabit();renderAll()};
-$("#notesEditor").addEventListener("input",()=>{localStorage.setItem(NOTES,$("#notesEditor").value);$("#notesStatus").textContent="Salvo agora";clearTimeout(window.noteTimer);window.noteTimer=setTimeout(()=>$("#notesStatus").textContent="Salvo automaticamente",900)});
+$("#noteAddButton").onclick=addNote;$("#canvasFirstNote").onclick=addNote;$("#noteClearButton").onclick=()=>{if(confirm("Limpar todas as notas do quadro?")){localStorage.removeItem(NOTES_DATA);renderNotes()}};
 $("#themeSelect").onchange=e=>{let s=getSettings();s.theme=e.target.value;localStorage.setItem(SETTINGS,JSON.stringify(s));applyTheme(s.theme)};
 $("#motivationToggle").onchange=e=>{let s=getSettings();s.motivation=e.target.checked;localStorage.setItem(SETTINGS,JSON.stringify(s));renderToday()};
-$("#clearData").onclick=()=>{if(confirm("Isso apagará hábitos, progresso e notas deste navegador. Continuar?")){localStorage.removeItem(KEY);localStorage.removeItem(NOTES);renderAll();view("today")}};
+$("#clearData").onclick=()=>{if(confirm("Isso apagará hábitos, progresso e notas deste navegador. Continuar?")){localStorage.removeItem(KEY);localStorage.removeItem(NOTES);localStorage.removeItem(NOTES_DATA);localStorage.removeItem(PROFILE);localStorage.removeItem(SETTINGS);renderAll();view("today")}};
 $("#editProfile").onclick=openProfile;$("#closeProfileModal").onclick=closeProfile;$("#profileModalBackdrop").onclick=e=>{if(e.target.id==="profileModalBackdrop")closeProfile()};$("#profileForm").onsubmit=e=>{e.preventDefault();localStorage.setItem(PROFILE,JSON.stringify({name:$("#profileName").value.trim()||"Minha rotina",email:$("#profileEmail").value.trim()}));closeProfile();renderProfile()};
 applyTheme(getSettings().theme);renderAll();
