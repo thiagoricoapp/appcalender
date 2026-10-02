@@ -52,18 +52,22 @@ function renderSelectedDay(){
 }
 function toggleOnDate(id,k){let d=data(),h=d.habits.find(x=>x.id===id);if(!h)return;h.completions=h.completions||{};h.completions[k]=!h.completions[k];if(!h.completions[k])delete h.completions[k];save(d);renderCalendar()}
 function calcStats(h){
- h=normalizedHabit(h);let completed=Object.keys(h.completions||{}).filter(k=>h.completions[k]).sort(),total=completed.length;
- let current=0,d=new Date(today);
+ h=normalizedHabit(h);let completed=Object.keys(h.completions||{}).filter(k=>h.completions[k]).sort(),total=completed.length,current=0,best=0;
  if(h.frequency==="weekly"){
+  const weekKey=d=>{let x=new Date(d),day=x.getDay()||7;x.setDate(x.getDate()-day+1);return key(x)};
+  const counts={};completed.forEach(k=>{let p=k.split("-").map(Number);let wk=weekKey(new Date(p[0],p[1]-1,p[2]));counts[wk]=(counts[wk]||0)+1});
   let cursor=new Date(today);
-  while(true){let start=new Date(cursor),day=start.getDay()||7;start.setDate(start.getDate()-day+1);let end=new Date(start);end.setDate(end.getDate()+6);let count=Object.keys(h.completions||{}).filter(k=>h.completions[k]).filter(k=>{let p=k.split("-").map(Number),dt=new Date(p[0],p[1]-1,p[2]);return dt>=start&&dt<=end}).length;if(count>=h.weeklyTarget){current++;cursor=new Date(start);cursor.setDate(cursor.getDate()-1)}else break}
- }else{while(d>=new Date(h.createdAt||today)){if(isScheduled(h,d)){if(h.completions?.[key(d)])current++;else break}d.setDate(d.getDate()-1)}}
- let best=0,run=0,prev=null;
- completed.forEach(k=>{let p=k.split("-").map(Number),dt=new Date(p[0],p[1]-1,p[2]);if(prev){let delta=Math.round((dt-prev)/86400000);if(delta===1)run++;else run=1}else run=1;best=Math.max(best,run);prev=dt});
+  while(true){let wk=weekKey(cursor);if((counts[wk]||0)>=h.weeklyTarget){current++;cursor.setDate(cursor.getDate()-7)}else break}
+  let weeks=Object.keys(counts).sort(),run=0,prev=null;weeks.forEach(w=>{let p=w.split("-").map(Number),dt=new Date(p[0],p[1]-1,p[2]);if((counts[w]||0)>=h.weeklyTarget){if(prev){let delta=Math.round((dt-prev)/86400000);if(delta===7)run++;else run=1}else run=1;best=Math.max(best,run);prev=dt}else{run=0;prev=null}});
+ }else{
+  let d=new Date(today);while(d>=new Date(h.createdAt||today)){if(isScheduled(h,d)){if(h.completions?.[key(d)])current++;else break}d.setDate(d.getDate()-1)}
+  let run=0,d=new Date(h.createdAt||today);d.setHours(0,0,0,0);while(d<=today){if(isScheduled(h,d)){if(h.completions?.[key(d)])run++;else run=0;best=Math.max(best,run)}d.setDate(d.getDate()+1)}
+ }
  let scheduled=0,done30=0;
  for(let i=0;i<30;i++){let dt=new Date(today);dt.setDate(dt.getDate()-i);if(isScheduled(h,dt)){scheduled++;if(h.completions?.[key(dt)])done30++}}
- let rate=h.frequency==="weekly"?Math.min(100,Math.round((done30/Math.max(1,h.weeklyTarget*Math.ceil(30/7)))*100)):Math.round(done30/Math.max(1,scheduled)*100);
- return {total,current,best,rate,done30,scheduled}
+ let expected=h.frequency==="weekly"?h.weeklyTarget*Math.ceil(30/7):scheduled;
+ let rate=Math.min(100,Math.round((done30/Math.max(1,expected))*100));
+ return {total,current,best,rate,done30,scheduled,expected}
 }
 function renderEvolution(){
  let d=data(),h=normalizedHabit(d.habits.find(x=>x.id===selectedHabitId)||d.habits[0]),empty=$("#evolutionEmpty"),content=$("#evolutionContent");
@@ -71,7 +75,7 @@ function renderEvolution(){
  selectedHabitId=h.id;empty.classList.add("hidden");content.classList.remove("hidden");
  let st=calcStats(h);$("#evolutionTitle").textContent=h.name;$("#evolutionName").textContent=h.name;$("#evolutionIcon").textContent=h.icon;$("#evolutionCategory").textContent=(h.category||"Rotina").toUpperCase();$("#evolutionSchedule").textContent=[frequencyText(h),h.time?"às "+h.time:"",goalText(h)].filter(Boolean).join(" · ");$("#statStreak").textContent=st.current;$("#statBest").textContent=st.best;$("#statRate").textContent=st.rate+"%";$("#statTotal").textContent=st.total;
  let heat=$("#heatmap");heat.innerHTML="";for(let i=29;i>=0;i--){let dt=new Date(today);dt.setDate(dt.getDate()-i),done=!!h.completions?.[key(dt)],cell=document.createElement("div");cell.className="heat-cell"+(isScheduled(h,dt)?" scheduled":"")+(done?" done":"");cell.dataset.tip=dt.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" · "+(done?"concluído":"não concluído");heat.appendChild(cell)}
- let rows=[["Frequência",frequencyText(h)],["Horário",h.time||"Sem horário"],["Meta",goalText(h)],["Categoria",h.category||"Rotina"],["Últimos 30 dias",st.done30+" realizados de "+st.scheduled+" previstos"],["Criado em",h.createdAt?new Date(h.createdAt).toLocaleDateString("pt-BR"):"—"]];$("#evolutionDetails").innerHTML=rows.map(r=>`<div class="detail-row"><span>${esc(r[0])}</span><strong>${esc(r[1])}</strong></div>`).join("")
+ let rows=[["Frequência",frequencyText(h)],["Horário",h.time||"Sem horário"],["Meta",goalText(h)],["Categoria",h.category||"Rotina"],["Últimos 30 dias",st.done30+" realizados de "+st.expected+" esperados"],["Criado em",h.createdAt?new Date(h.createdAt).toLocaleDateString("pt-BR"):"—"]];$("#evolutionDetails").innerHTML=rows.map(r=>`<div class="detail-row"><span>${esc(r[0])}</span><strong>${esc(r[1])}</strong></div>`).join("")
 }
 const NOTES_DATA="rotina-notes-board-v1";
 function getBoard(){try{return JSON.parse(localStorage.getItem(NOTES_DATA))||[]}catch{return[]}}
