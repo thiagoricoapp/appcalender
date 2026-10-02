@@ -25,6 +25,9 @@ function renderHabits(){
  b.appendChild(e)
  })
 }
+function prevMonth(){month.setMonth(month.getMonth()-1);selectedDate=new Date(month);renderCalendar()}
+function nextMonth(){month.setMonth(month.getMonth()+1);selectedDate=new Date(month);renderCalendar()}
+function clearNotes(){if(confirm("Limpar todas as notas do quadro?")){localStorage.removeItem(STORAGE.notes);renderNotes()}}
 function renderCalendar(){
  let y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),start=(first.getDay()+6)%7,d=data();
  $("#calendarMonthTitle").textContent=month.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
