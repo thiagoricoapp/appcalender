@@ -15,6 +15,7 @@
     <button class="nav-item active" data-view="today"><span>☀</span> Hoje</button>
     <button class="nav-item" data-view="calendar"><span>▦</span> Calendário</button>
     <button class="nav-item" data-view="habits"><span>✎</span> Hábitos</button>
+    <button class="nav-item" data-view="evolution"><span>↗</span> Evolução</button>
     <button class="nav-item" data-view="notes"><span>☷</span> Notas</button>
   </nav>
   <div class="sidebar-divider"></div>
@@ -49,6 +50,27 @@
   <div id="emptyHabits" class="empty-state hidden"><div class="empty-icon">✎</div><h3>Nenhum hábito cadastrado</h3><p>Comece criando uma pequena mudança que faça sentido para você.</p><button class="secondary-button" id="emptyAddButton2">Criar hábito</button></div>
 </section>
 
+<section id="evolutionView" class="view">
+  <div class="section-heading"><div><span class="mini-label">EVOLUÇÃO</span><h3 id="evolutionTitle">Selecione um hábito</h3></div><button class="secondary-button" id="evolutionBack">← Voltar para hábitos</button></div>
+  <div id="evolutionEmpty" class="empty-state"><div class="empty-icon">↗</div><h3>Acompanhe uma evolução de cada vez</h3><p>Abra um hábito na aba Hábitos para ver sequência, consistência e histórico.</p></div>
+  <div id="evolutionContent" class="hidden">
+    <div class="evolution-head">
+      <div class="evolution-icon" id="evolutionIcon">☀️</div><div class="evolution-main"><span class="mini-label" id="evolutionCategory">ROTINA</span><h2 id="evolutionName"></h2><p id="evolutionSchedule"></p></div>
+      <button class="primary-button" id="evolutionEdit">Editar hábito</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><span>SEQUÊNCIA ATUAL</span><strong id="statStreak">0</strong><small>dias</small></div>
+      <div class="stat-card"><span>MELHOR SEQUÊNCIA</span><strong id="statBest">0</strong><small>dias</small></div>
+      <div class="stat-card"><span>ÚLTIMOS 30 DIAS</span><strong id="statRate">0%</strong><small>consistência</small></div>
+      <div class="stat-card"><span>TOTAL REGISTRADO</span><strong id="statTotal">0</strong><small>conclusões</small></div>
+    </div>
+    <div class="evolution-panels">
+      <div class="panel-card"><div class="panel-head"><div><span class="mini-label">HISTÓRICO</span><h3>Últimos 30 dias</h3></div><span class="legend"><i></i> concluído</span></div><div id="heatmap" class="heatmap"></div></div>
+      <div class="panel-card"><div class="panel-head"><div><span class="mini-label">DETALHES</span><h3>Como está esse hábito</h3></div></div><div class="detail-rows" id="evolutionDetails"></div></div>
+    </div>
+  </div>
+</section>
+
 <section id="notesView" class="view">
   <div class="section-heading"><div><span class="mini-label">DIÁRIO</span><h3>Notas da sua rotina</h3></div><span class="save-status" id="notesStatus">Salvo automaticamente</span></div>
   <div class="notes-toolbar">
@@ -80,7 +102,17 @@
 </section>
 </main></div>
 
-<div class="modal-backdrop hidden" id="modalBackdrop"><div class="modal"><button class="modal-close" id="closeModal">×</button><span class="mini-label">NOVO HÁBITO</span><h2>Que hábito você quer construir?</h2><form id="habitForm"><label>Nome do hábito<input id="habitName" maxlength="50" placeholder="Ex.: Acordar às 06:30" required></label><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option></select></label><label>Meta diária<input id="habitGoal" maxlength="30" placeholder="Ex.: todos os dias"></label><button class="primary-button full" type="submit">Criar hábito</button></form></div></div>
+<div class="modal-backdrop hidden" id="modalBackdrop"><div class="modal habit-modal"><button class="modal-close" id="closeModal">×</button><span class="mini-label" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
+<label>Nome do hábito<input id="habitName" maxlength="50" placeholder="Ex.: Acordar às 06:30" required></label>
+<div class="form-grid"><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option><option>💪</option><option>🧠</option></select></label><label>Categoria<input id="habitCategory" maxlength="30" list="categoryList" placeholder="Ex.: Saúde"><datalist id="categoryList"><option value="Rotina"><option value="Saúde"><option value="Estudos"><option value="Trabalho"><option value="Finanças"><option value="Bem-estar"><option value="Exercício"></datalist></label></div>
+<div class="form-grid"><label>Horário<input id="habitTime" type="time"></label><label>Meta<input id="habitGoalValue" type="number" min="0" step="1" placeholder="Ex.: 1"><select id="habitGoalUnit"><option value="vez">vez</option><option value="vezes">vezes</option><option value="minutos">minutos</option><option value="páginas">páginas</option><option value="copos">copos</option><option value="km">km</option><option value="horas">horas</option></select></label></div>
+<label>Frequência<select id="habitFrequency"><option value="daily">Todos os dias</option><option value="specific">Dias específicos</option><option value="weekly">Meta semanal</option></select></label>
+<div id="specificDaysWrap" class="days-wrap"><span class="field-label">Dias da semana</span><div class="day-picker">
+<label><input type="checkbox" value="1">Seg</label><label><input type="checkbox" value="2">Ter</label><label><input type="checkbox" value="3">Qua</label><label><input type="checkbox" value="4">Qui</label><label><input type="checkbox" value="5">Sex</label><label><input type="checkbox" value="6">Sáb</label><label><input type="checkbox" value="7">Dom</label>
+</div></div>
+<div id="weeklyWrap" class="weekly-wrap"><label>Quantas vezes por semana?<input id="weeklyTarget" type="number" min="1" max="7" value="3"></label></div>
+<div class="modal-actions"><button class="secondary-button" type="button" id="deleteHabitFromModal">Excluir</button><button class="primary-button" type="submit" id="habitSubmit">Criar hábito</button></div>
+</form></div></div>
 
 <div class="modal-backdrop hidden" id="profileModalBackdrop"><div class="modal"><button class="modal-close" id="closeProfileModal">×</button><span class="mini-label">SEU PERFIL</span><h2>Como quer aparecer?</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail (opcional)<input id="profileEmail" type="email" maxlength="80" placeholder="voce@email.com"></label><button class="primary-button full" type="submit">Salvar perfil</button></form></div></div>
 <script src="app.js"></script>
