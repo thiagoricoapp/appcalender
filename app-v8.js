@@ -3,6 +3,7 @@
 const K={habits:"rotina-v8-habits",notes:"rotina-v8-notes",profile:"rotina-v8-profile",settings:"rotina-v8-settings"};
 let deferredInstallPrompt=null;
 const S={today:new Date(),month:new Date(new Date().getFullYear(),new Date().getMonth(),1),selectedDate:new Date(),selectedHabitId:null,editingId:null,session:null,channel:null,auth:"login",collapsed:localStorage.getItem("rotina_sidebar_v2")==="1"};
+const E2E=(location.hostname==="localhost"||location.hostname==="127.0.0.1")&&new URLSearchParams(location.search).has("e2e");
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>Array.from(r.querySelectorAll(q));
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const data=()=>read(K.habits,{habits:[]}),notes=()=>read(K.notes,[]),profile=()=>read(K.profile,{name:"Minha rotina",email:""}),settings=()=>read(K.settings,{theme:"obsidian",motivation:true});
@@ -94,6 +95,6 @@ document.addEventListener("change",async e=>{if(e.target.id==="habitFrequency")r
 }
 async function logout(){S.channel?.unsubscribe();await window.supabaseClient.auth.signOut({scope:"local"});S.session=null;Object.values(K).forEach(k=>localStorage.removeItem(k));location.reload()}
 function clearLocal(){if(confirm("Limpar somente o cache deste navegador?")){localStorage.removeItem(K.habits);localStorage.removeItem(K.notes);location.reload()}}
-function boot(){bind();applyTheme();installPwa();window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installApp")?.removeAttribute("hidden")});window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;$("#installApp")?.setAttribute("hidden","")});window.supabaseClient?.auth?.onAuthStateChange?.((_,session)=>{if(session&&!S.session)enter(session)});if(!window.SUPABASE_READY){$("#authScreen").hidden=false;return}window.supabaseClient.auth.getSession().then(r=>r.data.session?enter(r.data.session):($("#authScreen").hidden=false)).catch(()=>$("#authScreen").hidden=false)}
+function boot(){bind();applyTheme();installPwa();if(E2E){S.session={user:{id:"e2e-user",email:"e2e@local"}};$("#authScreen").hidden=true;$("#appShell").hidden=false;nav("today");return}window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;$("#installApp")?.removeAttribute("hidden")});window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;$("#installApp")?.setAttribute("hidden","")});window.supabaseClient?.auth?.onAuthStateChange?.((_,session)=>{if(session&&!S.session)enter(session)});if(!window.SUPABASE_READY){$("#authScreen").hidden=false;return}window.supabaseClient.auth.getSession().then(r=>r.data.session?enter(r.data.session):($("#authScreen").hidden=false)).catch(()=>$("#authScreen").hidden=false)}
 boot();
 })();
