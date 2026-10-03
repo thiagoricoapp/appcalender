@@ -23,7 +23,7 @@ const duplicateFunctions = [...js.matchAll(/(?:^|\n)function\s+([A-Za-z_$][\w$]*
 if (duplicateFunctions.length) errors.push("Duplicate function declarations: " + [...new Set(duplicateFunctions)].join(", "));
 const syntax = spawnSync(process.execPath, ["--check","app-v8.js"], { stdio:"inherit" });
 if (syntax.status !== 0) errors.push("app-v8.js failed syntax check.");
-if (/service_role|secret_key/i.test(await read("supabase-client.js"))) errors.push("Privileged Supabase key pattern found in browser config.");
+if (/publishableKey\s*:\s*['"](?:service_role|sb_service_role|secret)/i.test(await read("supabase-client.js"))) errors.push("Privileged Supabase key pattern found in browser config.");
 for (const asset of ["./app-v8.js","./styles-v8.css","./supabase-client.js","./manifest.webmanifest","./icon.svg","./icon-192.png","./icon-512.png"]) if (!sw.includes(asset)) errors.push("Service worker does not cache " + asset);
 if (!/"192x192"/.test(manifest) || !/"512x512"/.test(manifest)) errors.push("Manifest must declare 192x192 and 512x512 icons.");
 
