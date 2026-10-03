@@ -1,0 +1,15 @@
+{
+  "name":"Rotina — hábitos & evolução",
+  "short_name":"Rotina",
+  "description":"Um espaço pessoal para hábitos, rotina, calendário, notas e evolução.",
+  "lang":"pt-BR",
+  "dir":"ltr",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#080a0c",
+  "theme_color":"#080a0c",
+  "icons":[
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
