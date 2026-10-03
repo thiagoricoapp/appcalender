@@ -190,7 +190,7 @@ function bind(){
  $("#authForm").addEventListener("submit",handleAuthSubmit);
  $("#authSwitch").addEventListener("click",()=>{if(authMode==="forgot")setAuthMode("login");else setAuthMode(authMode==="signup"?"login":"signup")});
  $("#forgotPassword").addEventListener("click",()=>{authMode="forgot";$("#authTitle").textContent="Redefina sua senha";$("#authSubtitle").textContent="Enviaremos um link para seu e-mail.";$("#authConfirmWrap").classList.add("hidden");$("#authNameWrap").classList.add("hidden");$("#authEmail").disabled=false;$("#authSubmit").textContent="Enviar link";$("#authSwitch").textContent="Voltar para entrar";$("#forgotPassword").classList.add("hidden")});
- $("#authEmail").addEventListener("input",()=>setAuthMessage(""));
+ $("#authEmail").addEventListener("input",()=>setAuthMessage(""));$("#resendConfirm").addEventListener("click",async()=>{const email=$("#authEmail").value.trim();if(!email)return setAuthMessage("Informe seu e-mail.","error");$("#resendConfirm").disabled=true;const {error}=await window.supabaseClient.auth.resend({type:"signup",email,options:{emailRedirectTo:location.origin+location.pathname}});$("#resendConfirm").disabled=false;if(error)return setAuthMessage("Não foi possível reenviar agora. Tente novamente mais tarde.","error");setAuthMessage("Novo e-mail de confirmação enviado.","success")});
  $$("#addHabitButton,[data-open-habit]").forEach(x=>x.addEventListener("click",()=>openHabit()));
  $("#brandHome")?.addEventListener("click",()=>showView("today"));
  $("#mobileMenu")?.addEventListener("click",()=>$("#sidebar")?.classList.toggle("mobile-open"));
