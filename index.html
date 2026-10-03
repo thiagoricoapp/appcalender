@@ -120,20 +120,11 @@
   </main>
 </div>
 
-<div class="modal-backdrop" id="habitModal" hidden><div class="modal"><button class="modal-x" id="closeHabit">×</button><span class="eyebrow" id="habitModalLabel">NOVO HÁBITO</span><h2 id="habitModalTitle">Que hábito você quer construir?</h2><form id="habitForm">
-  <label>Nome<input id="habitName" maxlength="60" placeholder="Ex.: Acordar às 06:30" required></label>
-  <div class="form-grid"><label>Categoria<input id="habitCategory" list="categoryList" maxlength="30" placeholder="Saúde"><datalist id="categoryList"><option>Rotina</option><option>Saúde</option><option>Estudos</option><option>Trabalho</option><option>Exercício</option><option>Bem-estar</option><option>Finanças</option></datalist></label><label>Ícone<select id="habitIcon"><option>☀️</option><option>📚</option><option>🏃</option><option>💧</option><option>🧘</option><option>🛌</option><option>✍️</option><option>🎯</option><option>💪</option><option>🧠</option></select></label></div>
-  <div class="form-grid"><label>Horário<input id="habitTime" type="time"></label><label>Meta<input id="habitGoalValue" type="number" min="0" step="1" placeholder="1"></label></div>
-  <label>Unidade da meta<select id="habitGoalUnit"><option value="vez">vez</option><option value="vezes">vezes</option><option value="minutos">minutos</option><option value="páginas">páginas</option><option value="copos">copos</option><option value="km">km</option><option value="horas">horas</option></select></label>
-  <label>Frequência<select id="habitFrequency"><option value="daily">Todos os dias</option><option value="specific">Dias específicos</option><option value="weekly">Meta semanal</option></select></label>
-  <div class="days-wrap" id="specificDaysWrap"><span class="field-label">Dias da semana</span><div class="day-picker"><label><input type="checkbox" value="1">Seg</label><label><input type="checkbox" value="2">Ter</label><label><input type="checkbox" value="3">Qua</label><label><input type="checkbox" value="4">Qui</label><label><input type="checkbox" value="5">Sex</label><label><input type="checkbox" value="6">Sáb</label><label><input type="checkbox" value="7">Dom</label></div></div>
-  <div class="days-wrap" id="weeklyWrap"><label>Quantas vezes por semana?<input id="weeklyTarget" type="number" min="1" max="7" value="3"></label></div>
-  <div class="modal-footer"><button type="button" class="danger-btn" id="deleteHabitModal">Excluir</button><button type="submit" class="primary-btn" id="habitSubmit">Criar hábito</button></div>
-</form></div></div>
-
-<div class="modal-backdrop" id="profileModal" hidden><div class="modal small-modal"><button class="modal-x" id="closeProfile">×</button><span class="eyebrow">PERFIL</span><h2>Seu espaço pessoal</h2><form id="profileForm"><label>Nome<input id="profileName" maxlength="40" placeholder="Seu nome"></label><label>E-mail<input id="profileEmail" type="email" maxlength="100" placeholder="voce@email.com"></label><button type="submit" class="primary-btn">Salvar perfil</button></form></div></div>
-
+<div class="modal-backdrop" id="globalModal" hidden><div class="modal" id="globalModalBox">
+  <button class="modal-x" id="globalModalClose" type="button">×</button>
+  <div id="globalModalContent"></div>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-client.js"></script>
-<script src="app-v4.js"></script>
+<script src="app-v5.js"></script>
 </body></html>
