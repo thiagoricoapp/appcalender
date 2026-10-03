@@ -38,3 +38,9 @@ A interface foi redesenhada com foco em desktop, tema escuro profissional, micro
 - RLS por usuário nas tabelas.
 
 O app continua funcionando em modo local até as credenciais e o login do Supabase serem configurados.
+
+
+## Conta e sincronização
+A V4 adiciona cadastro e login por e-mail e senha com Supabase Auth. Quando o usuário entra, o app carrega hábitos, conclusões, notas, perfil e preferências da nuvem. Dados locais existentes podem ser migrados automaticamente na primeira entrada quando a conta ainda não possui dados.
+
+Para usar o cadastro por e-mail em produção, configure no Supabase Authentication a URL pública do GitHub Pages como URL do site/redirect permitido. O endereço atual do app é `https://thiagoricoapp.github.io/appcalender/`.
