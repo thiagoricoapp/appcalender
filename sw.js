@@ -1,5 +1,5 @@
 const CACHE="rotina-shell-v8-1";
-const APP_URLS=["./","./index.html","./styles-v8.css","./app-v8.js","./supabase-client.js","./manifest.webmanifest","./icon.svg"];
+const APP_URLS=["./","./index.html","./styles-v8.css","./app-v8.js","./supabase-client.js","./manifest.webmanifest","./icon.svg","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(APP_URLS)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",event=>{
