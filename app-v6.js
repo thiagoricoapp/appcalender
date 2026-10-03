@@ -135,6 +135,13 @@ async function enterApp(session){
  currentSession=session;showApp();
  try{await loadRemote();showView("today")}catch(e){console.error(e);setSync("Offline","error");showView("today")}
 }
+async function replaceCompletionsForHabit(h){
+ if(!currentSession||!window.SUPABASE_READY)return;
+ const {error:delError}=await window.supabaseClient.from("habit_completions").delete().eq("habit_id",h.id).eq("user_id",currentSession.user.id);
+ if(delError)throw delError;
+ const rows=Object.keys(h.completions||{}).filter(k=>h.completions[k]).map(k=>({habit_id:h.id,user_id:currentSession.user.id,completed_on:k}));
+ if(rows.length){const {error}=await window.supabaseClient.from("habit_completions").upsert(rows,{onConflict:"habit_id,completed_on"});if(error)throw error}
+}
 async function remoteUpsertHabit(h){
  if(!currentSession||!window.SUPABASE_READY)return;
  const {error}=await window.supabaseClient.from("habits").upsert({id:h.id,user_id:currentSession.user.id,name:h.name,icon:h.icon,category:h.category,time:h.time||null,goal_value:h.goalValue===""?null:Number(h.goalValue),goal_unit:h.goalUnit||null,frequency:h.frequency,days:h.days||[],weekly_target:h.weeklyTarget||3,created_at:h.createdAt||new Date().toISOString(),updated_at:new Date().toISOString()},{onConflict:"id"});
