@@ -33,7 +33,7 @@ test.describe("Rotina critical flows", () => {
 
   test("notes and settings respond", async ({ page }) => {
     await page.getByRole("button", { name: "Notas" }).click();
-    await page.locator("[data-action=\"new-note\"]").click();
+    await page.locator(".notes-toolbar [data-action=\"new-note\"]").click();
     await expect(page.locator("#notesCanvas .note-card")).toHaveCount(1);
     await page.getByRole("button", { name: "Configurações" }).click();
     await page.locator("#motivationToggle").uncheck();
