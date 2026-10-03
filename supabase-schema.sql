@@ -78,3 +78,6 @@ drop policy if exists "settings own rows" on public.user_settings;
 create policy "settings own rows" on public.user_settings for all using (auth.uid()=user_id) with check (auth.uid()=user_id);
 
 grant select, insert, update, delete on public.profiles, public.habits, public.habit_completions, public.notes, public.user_settings to authenticated;
+
+revoke execute on function public.handle_new_user() from anon, authenticated;
+grant execute on function public.handle_new_user() to postgres;
