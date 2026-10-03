@@ -1,46 +1,58 @@
-# AppCalender — Rotina
+# Rotina — hábitos & evolução
 
-Aplicativo web para construir hábitos e acompanhar a própria evolução.
+Aplicativo pessoal de hábitos com calendário, progresso, notas, autenticação e sincronização entre dispositivos.
 
-## O que já existe
+## Arquitetura atual
+
+- Frontend estático publicado no GitHub Pages.
+- Supabase Auth + Postgres + Realtime para identidade e sincronização.
+- PWA instalável em desktop e dispositivos móveis.
+- Tabler Icons para iconografia consistente.
+- Playwright para testes de fluxos críticos.
+- Validação estrutural antes de cada deploy.
+- GitHub Actions com ações fixadas por SHA e deploy bloqueado quando os testes falham.
+
+## Funcionalidades
+
 - Hoje: hábitos do dia, progresso e sequência.
-- Calendário: visão mensal do histórico.
-- Hábitos: criação, acompanhamento e exclusão.
-- Notas: diário pessoal com salvamento automático.
-- Configurações: temas, mensagens motivacionais e limpeza de dados locais.
-- Conta: perfil local com nome e e-mail opcional.
-- Layout responsivo para desktop e celular.
+- Calendário: visão mensal e marcação por data.
+- Hábitos: criação, edição, frequência, horário, meta, categoria e ícone.
+- Evolução: sequência atual, melhor sequência, taxa e histórico.
+- Notas: quadro pessoal com salvamento e posição.
+- Configurações: tema, motivação e instalação do app.
+- Conta: perfil e encerramento de sessão.
+- Sincronização por conta entre dispositivos.
 
-## Dados
-A primeira versão usa `localStorage`, portanto os dados ficam no navegador/dispositivo atual. Não há login ou banco de dados ainda.
+## Banco e segurança
 
-## Próxima evolução
-Autenticação, banco de dados, sincronização entre dispositivos, edição de hábitos, metas por frequência, estatísticas, conquistas e PWA.
+As tabelas principais são `profiles`, `habits`, `habit_completions`, `notes` e `user_settings`.
 
-## Hábitos avançados
-Cada hábito pode ter:
-- Frequência diária, dias específicos ou meta semanal.
-- Horário.
-- Meta com unidade.
-- Categoria.
-- Edição e exclusão.
-- Página individual de evolução.
-- Sequência atual e melhor sequência.
-- Consistência dos últimos 30 dias.
-- Total de conclusões.
-- Histórico visual dos últimos 30 dias.
+O RLS usa `(select auth.uid())` para evitar reavaliação por linha, e as chaves estrangeiras usadas nas consultas de usuário possuem índices. O Supabase também possui Realtime habilitado para as entidades do app.
 
+A chave que fica no navegador deve ser somente a publishable key do Supabase. Nunca coloque `service_role` ou outra chave privilegiada no frontend.
 
-## V3 — visual e arquitetura
-A interface foi redesenhada com foco em desktop, tema escuro profissional, microinterações e navegação responsiva. O projeto também inclui uma base preparada para Supabase:
-- `supabase-client.js` para URL + chave publicável.
-- `supabase-schema.sql` com perfis, hábitos, conclusões, notas e configurações.
-- RLS por usuário nas tabelas.
+## Qualidade
 
-O app continua funcionando em modo local até as credenciais e o login do Supabase serem configurados.
+Execute:
 
+```bash
+npm install
+npm run validate
+npm run test:e2e
+```
 
-## Conta e sincronização
-A V4 adiciona cadastro e login por e-mail e senha com Supabase Auth. Quando o usuário entra, o app carrega hábitos, conclusões, notas, perfil e preferências da nuvem. Dados locais existentes podem ser migrados automaticamente na primeira entrada quando a conta ainda não possui dados.
+O teste E2E usa um modo de teste que só é aceito em `localhost`/\`127.0.0.1`, portanto não cria um bypass de autenticação no endereço público.
 
-Para usar o cadastro por e-mail em produção, configure no Supabase Authentication a URL pública do GitHub Pages como URL do site/redirect permitido. O endereço atual do app é `https://thiagoricoapp.github.io/appcalender/`.
+## Infraestrutura planejada
+
+A próxima evolução estrutural é migrar o frontend para TypeScript + Vite e separar o código em componentes, domínio, acesso a dados e serviços. A arquitetura alvo também prevê estado de servidor com cache/invalidação, validação de entrada, observabilidade, feature flags e uma suíte maior de testes.
+
+## Referências de arquitetura
+
+Alguns repositórios estudados durante a revisão:
+
+- PWABuilder PWA Starter: https://github.com/pwa-builder/pwa-starter
+- Playwright Examples: https://github.com/microsoft/playwright-examples
+- Lighthouse CI: https://github.com/GoogleChrome/lighthouse-ci
+- shadcn/ui: https://github.com/shadcn-ui/ui
+- exemplos de habit trackers modernos com React/TypeScript/Supabase: ver links no relatório desta revisão.
